@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts-en.common.js"></script>
+    <style type="text/css">
+        table{
+            width:640px;
+
+            border-style:solid;
+            border-bottom-width:thin;
+
+            table-layout:fixed;
+            empty-cells:show;
+            border-collapse: collapse;
+
+            font-size:14px;
+            border:1px solid #cad9ea;
+            color:#666;
+        }
+        td{
+            overflow:hidden;
+            height:25px;
+            border:1px solid #cad9ea;
+            padding:0 1em 0;
+        }
+
+        .div-inline{ margin-left: 20px; display:inline-block}
+    </style>
+    <title>好茶 DSL</title>
+    <script>
+        window.$docsify = {
+            loadSidebar: true
+        }
+    </script>
+
+    <script>
+        function sendsql(){
+            var sqlstr = $('#sqltext').val();
+
+
+            $.ajax({
+
+                url: '/getdata',
+                type: "post",
+                // dataType: "json",
+                data: sqlstr,
+                // headers: {'Content-Type': 'application/json'},
+
+            }).done(function(data) {
+                console.log("succ")
+                console.log(data)
+                try{
+                    var barChar = echarts.init(document.getElementById('barChart'));
+                    barChar.clear();
+                    barChar.setOption(JSON.parse(data), true);
+                    barChar.hideLoading();
+                    //barChar.show();
+                }catch (e) {
+                    console.log(e)
+                    $('#sdata').html(data);
+                }
+            }).fail(function (error){
+                $('#sdata').html(error.responseText);
+                console.log(error)
+                console.log('error!!!!')
+            });
+        }
+    </script>
+</head>
+<body>
+<div class="div-inline">
+    <textarea id="sqltext" style="width: 600px;height: 400px">
+         查询 {
+            本次 使用 数据库{
+//                username="1"
+//                password="1"
+//                url="jdbc:mysql://datahub.wang:3306/1"
+//                driver="com.mysql.jdbc.Driver"
+            }
+            本次  表 组("gtp_user","gtp_user_role")
+            本次  字段 组("gtp_user.name","gtp_user_role.role_id")
+
+            本次  条件 "gtp_user.name = 'admin'"
+            本次  聚合 组("gtp_user.name","gtp_user_role.role_id")
+            本次  排序 组("gtp_user_role.role_id")
+            本次  截取 (1 到 11)
+
+        } 画 线图
+    </textarea>
+    <br />
+    <button onclick="sendsql()">查询</button>
+</div>
+
+    <div id="sdata"  ref="sdata" class="div-inline"></div>
+<div id="schart" ref="schart" style="width:600px; height: 400px;"></div>
+</body>
+</html>

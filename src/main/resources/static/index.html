@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>好茶 DSL</title>
+    <link rel="stylesheet" href="//unpkg.com/docsify/lib/themes/vue.css">
+
+    <script>
+        window.$docsify = {
+            name: '好茶',
+            loadSidebar: true,
+            loadNavbar: true,
+            mergeNavbar: true,
+        }
+    </script>
+</head>
+<body>
+<div id="app"></div>
+</body>
+
+<script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script>
+    function sendsql(){
+        var sqlstr = $('#sqltext').val();
+
+
+        $.ajax({
+
+            url: '/getdata',
+            type: "post",
+            // dataType: "json",
+            data: sqlstr,
+            // headers: {'Content-Type': 'application/json'},
+
+        }).done(function(data) {
+            console.log("succ")
+            console.log(data)
+
+            $('#sdata').html(data);
+            $("div table").css("border",function(){return 1;});
+        }).fail(function (error){
+            $('#sdata').html(error.responseText);
+            console.log(error)
+            console.log('error!!!!')
+        });
+    }
+</script>
+</html>

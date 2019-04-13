@@ -1,0 +1,23 @@
+<div class="div-inline">
+    <textarea id="sqltext" style="width: 600px;height: 400px">
+         查询 {
+            本次 使用 数据库{
+//                username="1"
+//                password="1"
+//                url="jdbc:mysql://datahub.wang:3306/1"
+//                driver="com.mysql.jdbc.Driver"
+            }
+            本次  表 组("gtp_user","gtp_user_role")
+            本次  字段 组("gtp_user.name","gtp_user_role.role_id")
+
+            本次  条件 "gtp_user.name = 'admin'"
+            本次  聚合 组("gtp_user.name","gtp_user_role.role_id")
+            本次  排序 组("gtp_user_role.role_id")
+            本次  截取 (1 到 11)
+        }
+    </textarea>
+    <br />
+    <button onclick="sendsql()">查询</button>
+</div>
+
+<div id="sdata"  ref="sdata" class="div-inline"></div>
