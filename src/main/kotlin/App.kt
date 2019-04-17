@@ -25,9 +25,10 @@ object App {
             本次  聚合 组("gtp_user.name","gtp_user_role.role_id")
             本次  排序 组("gtp_user_role.role_id")
             本次  截取 (1 到 11)
-            print(本次  转 "csv")
+            本次  转 "json"
 
-        } 画 线图
+        } 发布 "aaa"
+
 
 //        System.out.println(t.formatChart())
 //        System.out.println(t.formatJSON())

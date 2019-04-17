@@ -29,4 +29,12 @@ fun main(args: Array<String>) {
 
     }
 
+    app.get("/published/:fid"){ctx->
+        ctx.contentType("application/octet-stream")
+        var fid = ctx.pathParam("fid")
+        System.out.println("fid = "+fid)
+        //ctx.resultStream(SQL.publishedFile(fid).inputStream())
+        ctx.result(SQL.publishedFile(fid).inputStream())
+    }
+
 }

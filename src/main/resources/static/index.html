@@ -21,6 +21,7 @@
 <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts-en.common.js"></script>
 <script>
     function sendsql(){
         var sqlstr = $('#sqltext').val();
@@ -37,9 +38,71 @@
         }).done(function(data) {
             console.log("succ")
             console.log(data)
+            try{
+                var barChar = echarts.init(document.getElementById('schart'));
+                barChar.clear();
+                barChar.setOption(JSON.parse(data), true);
+                barChar.hideLoading();
+                //barChar.show();
+            }catch (e) {
+                console.log(e)
+                $('#sdata').html(data);
+            }
+        }).fail(function (error){
+            $('#sdata').html(error.responseText);
+            console.log(error)
+            console.log('error!!!!')
+        });
+    }
 
-            $('#sdata').html(data);
-            $("div table").css("border",function(){return 1;});
+    function getdata(){
+        var sqlstr = $('#sqltext').val();
+
+
+        $.ajax({
+
+            url: '/getdata',
+            type: "post",
+            // dataType: "json",
+            data: sqlstr,
+            // headers: {'Content-Type': 'application/json'},
+
+        }).done(function(data) {
+            console.log("succ")
+            console.log(data)
+            try{
+                $('#sdata').html(data);
+            }catch (e) {
+                console.log(e)
+                $('#sdata').html(data);
+            }
+        }).fail(function (error){
+            $('#sdata').html(error.responseText);
+            console.log(error)
+            console.log('error!!!!')
+        });
+    }
+    function publish(){
+        var sqlstr = $('#sqltext').val();
+
+
+        $.ajax({
+
+            url: '/getdata',
+            type: "post",
+            // dataType: "json",
+            data: sqlstr,
+            // headers: {'Content-Type': 'application/json'},
+
+        }).done(function(data) {
+            console.log("succ")
+            console.log(data)
+            try{
+                $('#sdata').html("<a href='./published/"+data+"'>查看发布数据</a><br />如果没自动下载，可以复制连接：./published/"+data);
+            }catch (e) {
+                console.log(e)
+                $('#sdata').html(data);
+            }
         }).fail(function (error){
             $('#sdata').html(error.responseText);
             console.log(error)

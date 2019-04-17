@@ -3,6 +3,7 @@ package wang.datahub.fillin
 
 import org.jooq.*
 import org.jooq.impl.DSL
+import java.io.File
 import java.sql.DriverManager
 
 
@@ -19,7 +20,7 @@ class SQL {
     var offset:Int? = null;
     var limit: Pair<Int, Int>?=null
     var qid:String? = null
-
+    var formatter:String? = null
     infix fun 命名(name: String){
         this.qid = name
     }
@@ -56,7 +57,8 @@ class SQL {
     }
 
     infix fun 转(formater:String):String{
-        return when(formater){
+        formatter = formater
+        return when(formater.toLowerCase()){
             "html"->{
                 fetch().formatHTML()
             }
@@ -166,7 +168,23 @@ class SQL {
         return temp?.sql
     }
 
+    infix fun 发布(path:String):String{
+        //System.getProperty()
+//        var dp = System.getProperty("datapath")
+//        System.out.println("datapath = "+dp)
 
+        val file = SQL.publishedFile(path)
+        file.writeText(this.转(this.formatter+""))
+        return path
+    }
+
+    companion object {
+        fun publishedFile(path:String):File{
+            var dp = System.getProperty("datapath")
+            System.out.println("datapath = "+dp)
+            return File(dp,path)
+        }
+    }
 }
 
 data class DBC(var username:String?="dafei1288",var password:String?="dafei1288",var url:String?="jdbc:mysql://datahub.wang:3306/gtp-demo-07?useSSL=false",var driver:String?="com.mysql.jdbc.Driver")
