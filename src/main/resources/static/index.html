@@ -29,7 +29,7 @@
 
         $.ajax({
 
-            url: '/getdata',
+            url: '/dsl/getdata',
             type: "post",
             // dataType: "json",
             data: sqlstr,
@@ -61,7 +61,7 @@
 
         $.ajax({
 
-            url: '/getdata',
+            url: '/dsl/getdata',
             type: "post",
             // dataType: "json",
             data: sqlstr,
@@ -88,7 +88,7 @@
 
         $.ajax({
 
-            url: '/getdata',
+            url: '/dsl/getdata',
             type: "post",
             // dataType: "json",
             data: sqlstr,
@@ -98,7 +98,7 @@
             console.log("succ")
             console.log(data)
             try{
-                $('#sdata').html("<a href='./published/"+data+"'>查看发布数据</a><br />如果没自动下载，可以复制连接：./published/"+data);
+                $('#sdata').html("<a href='./dsl/published/"+data+"'>查看发布数据</a><br />如果没自动下载，可以复制连接：./published/"+data);
             }catch (e) {
                 console.log(e)
                 $('#sdata').html(data);

@@ -1,11 +1,13 @@
 package wang.datahub.fillin
 
 
+import com.google.gson.Gson
+import okhttp3.OkHttpClient
 import org.jooq.*
 import org.jooq.impl.DSL
 import java.io.File
 import java.sql.DriverManager
-
+import java.util.*
 
 
 class SQL {
@@ -30,6 +32,42 @@ class SQL {
         var conn = DriverManager.getConnection(dbc.url,dbc.username,dbc.password)
         dslContext = DSL.using(conn, SQLDialect.MYSQL);
     }
+
+    infix fun 使用(ds:DS):Unit{
+//        com.google.gson.internal.LinkedTreeMap
+        var dsName = ds.dsName
+        System.out.println(dsName)
+        var url = System.getProperty("resturl")
+
+//        var url = "http://localhost:8080/datasource/$dsName/json";
+        url = url+"/$dsName/json"
+        System.out.println("restful url  = "+url)
+        var r = okhttp3.Request.Builder().url(url).get().build();
+        var resp = OkHttpClient().newCall(r).execute()
+        var str = resp.body()?.string();
+        //System.out.println(str)
+        var s = Gson().fromJson(str,Map::class.java)
+        var p = s["data"]
+        var p1 = p as Map<String, Any>
+        var pros = p1["properties"]
+        var fs = pros as Collection<Map<String,String>>
+        var durl: String? = fs.first { it-> it.get("name").equals("url") }.get("value")
+        var username: String? = fs.first { it-> it.get("name").equals("username") }.get("value")
+        var password: String? = fs.first { it-> it.get("name").equals("password") }.get("value")
+        System.out.println(durl)
+        System.out.println(username)
+        System.out.println(password)
+
+        var conn = DriverManager.getConnection(durl,username,password)
+        dslContext = DSL.using(conn, SQLDialect.MYSQL);
+        System.out.println(pros)
+        //System.out.println(s)
+//        okhttp3.Request request =  okhttp3.Request.Builder().url(url).get().build();
+//        OkHttpClient okHttpClient = new OkHttpClient();
+//        final Call call = okHttpClient.newCall(request);
+
+    }
+
     infix fun 表( tableNames: List<String>):Unit{
         this.tableNames = tableNames
 
@@ -187,10 +225,11 @@ class SQL {
     }
 }
 
-data class DBC(var username:String?="dafei1288",var password:String?="dafei1288",var url:String?="jdbc:mysql://datahub.wang:3306/gtp-demo-07?useSSL=false",var driver:String?="com.mysql.jdbc.Driver")
-
+data class DBC(var username:String?="dafei1288",var password:String?="dafei1288",var url:String?="jdbc:mysql://datahub.wang:3306/1",var driver:String?="com.mysql.jdbc.Driver")
+data class DS(var dsName:String?="gquerydemo")
 fun 查询(body: SQL.() -> Unit) = SQL().apply(body)
 fun 数据库(body: DBC.() -> Unit) = DBC().apply(body)
+fun 数据源(body: DS.() -> Unit) = DS().apply(body)
 
 infix fun Int.到(i:Int):Pair<Int,Int>{
     return Pair(this,i)

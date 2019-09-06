@@ -9,7 +9,7 @@ fun main(args: Array<String>) {
         .enableStaticFiles("/static")
         .start(7777)
 
-    app.post("/getdata") { ctx ->
+    app.post("/dsl/getdata") { ctx ->
 
         ScriptEngineManager().engineFactories.forEach{it->System.out.println(it.engineName)}
 
@@ -29,7 +29,7 @@ fun main(args: Array<String>) {
 
     }
 
-    app.get("/published/:fid"){ctx->
+    app.get("/dsl/published/:fid"){ctx->
         ctx.contentType("application/octet-stream")
         var fid = ctx.pathParam("fid")
         System.out.println("fid = "+fid)
