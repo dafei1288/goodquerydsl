@@ -7,6 +7,8 @@ import javax.script.ScriptEngineManager
 fun main(args: Array<String>) {
     var app = Javalin.create()
         .enableStaticFiles("/static")
+        .enableCorsForAllOrigins()
+        .enableCaseSensitiveUrls()
         .start(7777)
 
     app.post("/dsl/getdata") { ctx ->
